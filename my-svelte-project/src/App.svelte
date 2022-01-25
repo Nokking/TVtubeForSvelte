@@ -1,10 +1,21 @@
 <script lang="ts">
+import { bubble } from "svelte/internal";
+
 	export let name: string;
+
+	let counter = 0;
+
+	const increaseOne = () =>{
+		counter++;
+	};
 </script>
 
 <main>
 	<h1>Hello {name}!</h1>
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
+	<div>Counter:{counter}</div>
+	<button on:click={increaseOne}>Add 1</button> 
+
 </main>
 
 <style>
