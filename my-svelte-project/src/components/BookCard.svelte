@@ -1,0 +1,1 @@
+import type { BookItem } from '../repositories/book'
