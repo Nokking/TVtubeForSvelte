@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Row from '/Row.svelte'
+    import Row from './Row.svelte'
     import type { BookItem } from '../repositories/book'
     export let book: BookItem
 
