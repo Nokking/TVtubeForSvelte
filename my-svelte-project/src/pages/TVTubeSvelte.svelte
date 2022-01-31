@@ -1,20 +1,19 @@
 <script lang="ts">
     import SearchBar from '../components/SearchBar.svelte';
-    import type {BookItem,Result} from '../repositories/book'
     import RepositoryFactory, {BOOK} from '../repositories/RepositoryFactory'
     import Spinner from '../components/Spinner.svelte';
     import BookCard from '../components/BookCard.svelte';
+    import { books } from '../store/book';
     import InfiniteScroll from "svelte-infinite-scroll"
     const BookRepository = RepositoryFactory[BOOK]
 
     let q = '';
     let empty = false
-    let books: BookItem[] = []
     let promise: Promise<void>
     let startIndex = 0
     let totalItems = 0
 
-    $: hasMore = totalItems > books.length
+    $: hasMore = totalItems > $books.length
 
     const handleSubmit = () => {
         if(!q.trim()) return
@@ -22,13 +21,13 @@
     };
 
     const getBooks = async () => {
-        books = []
+        books.reset()
         empty = false
         startIndex = 0
         const result = await BookRepository.get({ q })
         empty = result.totalItems === 0
         totalItems = result.totalItems
-        books = result.items
+        books.add(result.items)
     }
 
     const handleLoadMore = async () => {
@@ -40,12 +39,13 @@
         const result = await BookRepository.get({q, startIndex})
 
         //Filtering
-        const bookIds = books.map(book => book.id)
+        const bookIds = $books.map(book => book.id)
         const filteredItems = result.items.filter(item =>{
             return !bookIds.includes(item.id)
         })
-        books = [...books, ...filteredItems]
+        books.add(filteredItems)
     }
+    // onDestroy(unsubscribe)
 </script>
 
 <form on:submit|preventDefault={handleSubmit}>
@@ -57,12 +57,12 @@
         <div>検索結果が見つかりませんでした</div>
     {:else}
     <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
-        {#each books as book (book.id)}
+        {#each $books as book (book.id)}
             <BookCard {book} />
         {/each}
     </div>
     <!-- <InfiniteScroll threshold={100} on:loadMore={() => page++} />     -->
-        <InfiniteScroll window  />
+        <InfiniteScroll threshold={100} horizontal reverse={false} window on:loadMore={handleLoadMore} {hasMore} elementScroll={null}/>
     {/if}
     {#await promise}
         <div class="flex justify-center">
