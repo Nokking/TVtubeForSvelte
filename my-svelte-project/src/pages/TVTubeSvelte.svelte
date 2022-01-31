@@ -62,8 +62,9 @@
         {/each}
     </div>
     <!-- <InfiniteScroll threshold={100} on:loadMore={() => page++} />     -->
-        <InfiniteScroll threshold={100} horizontal reverse={false} window on:loadMore={handleLoadMore} {hasMore} elementScroll={null}/>
-    {/if}
+        <!-- <InfiniteScroll threshold={100} horizontal reverse={false} window on:loadMore={handleLoadMore} {hasMore} elementScroll={null}/> -->
+        <InfiniteScroll window threshold={100} on:loadMore={handleLoadMore} {hasMore} />
+        {/if}
     {#await promise}
         <div class="flex justify-center">
             <Spinner />
