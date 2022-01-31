@@ -1,0 +1,11 @@
+Changed Axios's bugs
+(Circular dependencies:Axios)
+Source: /workspace/TVtubeForSvelte/my-svelte-project/node_modules/axios/lib/adapters/xhr.js
+
+Points: 
+/line 11:   // var defaults = require('../defaults'); 
+and 
+/line 126;  // var transitional = config.transitional || defaults.transitional;
+Commented these lines.
+
+/* I left this note because node_modules are not tracked. */
